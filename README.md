@@ -47,3 +47,16 @@ npm test
 The GitHub Actions workflow installs dependencies, runs the automated tests and builds the Docker image on pushes and pull requests. It does not publish an image or deploy the application.
 
 The earlier tutorial's `login.js` is retained locally for reference; the current application implements authentication in `index.js` and the image does not use `login.js`.
+
+## Run the pipeline in Jenkins
+
+Jenkins can run the `Jenkinsfile` in this repository on Windows. Make sure Docker Desktop is open and its engine is running, then open `http://localhost:8080` and sign in.
+
+1. Select **New Item**, enter `hospital-appointment-system`, choose **Pipeline**, and select **OK**.
+2. In the **Pipeline** section choose **Pipeline script from SCM**.
+3. Set **SCM** to **Git**, use `https://github.com/saigayathria48/hospital-appointment-system.git`, and set the branch to `*/main`.
+4. Leave the script path as `Jenkinsfile`, save, and select **Build Now**.
+
+The pipeline installs dependencies, runs `npm test`, builds a local image named `hospital-appointment-system:jenkins-<build-number>`, starts it temporarily on port 3010, and checks `http://127.0.0.1:3010/health`. It removes the temporary container after the build. It does not publish an image or change the running application on port 3001.
+
+If Jenkins reports that Docker cannot be found, keep Docker Desktop running and add its CLI directory (`C:\Users\SaiGayathri\AppData\Local\Programs\DockerDesktop\resources\bin`) to the Jenkins service PATH, then restart the Jenkins service. The pipeline also checks that path automatically on this computer.
