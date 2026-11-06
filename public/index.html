@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Hospital Appointment Booking</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="Hospital appointment home"><span class="brand-mark" aria-hidden="true">+</span><span>Care<span class="brand-accent">Connect</span><small>APPOINTMENT DESK</small></span></a>
+      <div class="identity" id="identity" hidden><span id="user-label"></span><button class="button button-quiet" id="logout" type="button">Sign out</button></div>
+    </div>
+  </header>
+  <main class="shell">
+    <p id="message" class="notice" role="status" aria-live="polite" hidden></p>
+    <section id="auth-view" class="auth-layout">
+      <div class="intro"><p class="eyebrow">A simpler way to schedule</p><h1>Care starts with a conversation.</h1><p>Find a doctor, choose an available time and keep track of your appointments in one place.</p><div class="intro-note"><span class="note-icon" aria-hidden="true">✓</span><span><strong>Made for your lab project</strong><br>Use sample patient information for this local demonstration.</span></div></div>
+      <div class="auth-card card"><div class="auth-tabs" role="group" aria-label="Account options"><button type="button" id="show-login" aria-pressed="true">Sign in</button><button type="button" id="show-register" aria-pressed="false">Create account</button></div>
+        <div id="login-panel"><h2>Welcome back</h2><p class="muted">Sign in to manage your appointments.</p><form id="login-form"><label>Email<input name="email" type="email" autocomplete="email" maxlength="200" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="button button-primary" type="submit">Sign in</button></form></div>
+        <div id="register-panel" hidden><h2>Create an account</h2><p class="muted">Register to book an appointment.</p><form id="register-form"><label>Full name<input name="name" type="text" autocomplete="name" maxlength="100" required></label><label>Email<input name="email" type="email" autocomplete="email" maxlength="200" required></label><label>Password <span class="hint">At least 8 characters</span><input name="password" type="password" autocomplete="new-password" minlength="8" required></label><button class="button button-primary" type="submit">Create account</button></form></div>
+      </div>
+    </section>
+    <div id="app-view" hidden>
+      <div class="page-heading"><div><p class="eyebrow">Appointment desk</p><h1 id="dashboard-title">Your appointments</h1><p id="dashboard-subtitle" class="muted">Find a doctor and choose a suitable time.</p></div></div>
+      <nav id="navigation" class="navigation" aria-label="Main navigation"><button type="button" data-view="doctors" aria-current="page">Find a doctor</button><button type="button" data-view="appointments">My appointments</button><button type="button" data-view="admin" data-admin hidden>Admin dashboard</button></nav>
+      <section class="view" id="doctors" aria-labelledby="doctors-title"><div class="section-heading"><div><p class="eyebrow">Find your care</p><h2 id="doctors-title">Browse doctors</h2><p class="muted">Search by specialization and choose an available slot.</p></div></div>
+        <form id="search-form" class="search card"><label>Specialization<input name="specialization" type="search" maxlength="100" placeholder="e.g. Cardiology"></label><button class="button button-primary" type="submit">Search</button><button class="button button-secondary" id="clear-search" type="button">Show all</button></form>
+        <div class="columns"><div><div id="doctor-list" class="stack" aria-live="polite"></div></div><div><div class="card slot-card"><p class="eyebrow">Available times</p><h3 id="slot-heading">Select a doctor</h3><p id="slot-help" class="muted">Choose a doctor to see appointment slots.</p><div id="slot-list" class="stack" aria-live="polite"></div></div></div></div>
+      </section>
+      <section class="view" id="appointments" hidden aria-labelledby="appointments-title"><div class="section-heading"><div><p class="eyebrow">Your schedule</p><h2 id="appointments-title">My appointments</h2><p class="muted">Review or cancel your bookings.</p></div><button class="button button-secondary" id="refresh-appointments" type="button">Refresh</button></div><div id="appointment-list" class="stack" aria-live="polite"></div></section>
+      <section class="view" id="admin" hidden aria-labelledby="admin-title"><div class="section-heading"><div><p class="eyebrow">Administration</p><h2 id="admin-title">Admin dashboard</h2><p class="muted">Manage doctors, available times and bookings.</p></div></div>
+        <div class="columns"><div class="card"><h3>Add a doctor</h3><form id="doctor-form"><label>Doctor name<input name="name" maxlength="100" required></label><label>Specialization<input name="specialization" maxlength="100" required></label><button class="button button-primary">Add doctor</button></form><h3 class="subheading">Doctors</h3><div id="admin-doctors" class="stack compact"></div></div>
+        <div class="card"><h3>Add an available time</h3><form id="slot-form"><label>Doctor<select name="doctorId" required></select></label><label>Date<input name="date" type="date" required></label><label>Time<input name="time" type="time" required></label><button class="button button-primary">Add time slot</button></form><p class="hint">Patients can book a slot after it is added.</p></div></div>
+        <div class="section-heading after-columns"><div><h3>All appointments</h3><p class="muted">See booking status and cancel when needed.</p></div><button class="button button-secondary" id="refresh-admin" type="button">Refresh</button></div><div id="admin-appointments" class="stack" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="shell footer">Hospital appointment booking · Local lab demonstration</footer>
+</body>
+</html>

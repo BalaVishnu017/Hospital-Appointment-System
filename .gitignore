@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+!.env.example
+data/
+secrets/
+coverage/
+test-results/
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.log
+*.pem
+*.key
