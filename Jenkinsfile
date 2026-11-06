@@ -7,49 +7,34 @@ pipeline {
     }
 
     environment {
-        IMAGE = "hospital-appointment-system:jenkins-${BUILD_NUMBER}"
+        IMAGE = "hospital-appointment:jenkins-${BUILD_NUMBER}"
     }
 
     stages {
-        stage('Install dependencies') {
+        stage('Install Dependencies') {
             steps {
-                bat '''
-                    set "PATH=C:/Program Files/nodejs;%PATH%"
-                    call "C:/Program Files/nodejs/npm.cmd" ci
-                '''
+                bat 'npm ci'
             }
         }
 
-        stage('Run tests') {
+        stage('Run Tests') {
             steps {
-                bat '''
-                    set "PATH=C:/Program Files/nodejs;%PATH%"
-                    call "C:/Program Files/nodejs/npm.cmd" test
-                '''
+                bat 'npm test'
             }
         }
 
-        stage('Build Docker image') {
+        stage('Build Docker Image') {
             steps {
-                bat '''
-                    set "DOCKER_EXE="
-                    if exist "C:/Users/SaiGayathri/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe" set "DOCKER_EXE=C:/Users/SaiGayathri/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe"
-                    if not defined DOCKER_EXE set "DOCKER_EXE=docker"
-                    "%DOCKER_EXE%" version
-                    "%DOCKER_EXE%" build -t "%IMAGE%" .
-                '''
+                bat 'docker build -t %IMAGE% .'
             }
         }
 
-        stage('Docker health check') {
+        stage('Docker Health Check') {
             steps {
                 bat '''
-                    set "DOCKER_EXE="
-                    if exist "C:/Users/SaiGayathri/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe" set "DOCKER_EXE=C:/Users/SaiGayathri/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe"
-                    if not defined DOCKER_EXE set "DOCKER_EXE=docker"
-                    "%DOCKER_EXE%" rm -f hospital-jenkins-check >nul 2>&1
-                    "%DOCKER_EXE%" run -d --name hospital-jenkins-check -p 3010:3001 "%IMAGE%"
-                    powershell -NoProfile -ExecutionPolicy Bypass -Command "$deadline = (Get-Date).AddSeconds(30); do { try { $r = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:3010/health' -TimeoutSec 2; if ($r.StatusCode -eq 200) { exit 0 } } catch {}; Start-Sleep -Seconds 1 } while ((Get-Date) -lt $deadline); exit 1"
+                    docker rm -f hospital-jenkins-check 2>NUL
+                    docker run -d --name hospital-jenkins-check -p 3010:3001 %IMAGE%
+                    powershell -NoProfile -Command "$deadline=(Get-Date).AddSeconds(30); do { try { $r=Invoke-WebRequest -UseBasicParsing http://127.0.0.1:3010/health -TimeoutSec 2; if ($r.StatusCode -eq 200) { exit 0 } } catch {}; Start-Sleep 1 } while ((Get-Date) -lt $deadline); exit 1"
                 '''
             }
         }
@@ -58,11 +43,8 @@ pipeline {
     post {
         always {
             bat '''
-                set "DOCKER_EXE="
-                if exist "C:/Users/SaiGayathri/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe" set "DOCKER_EXE=C:/Users/SaiGayathri/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe"
-                if not defined DOCKER_EXE set "DOCKER_EXE=docker"
-                "%DOCKER_EXE%" logs hospital-jenkins-check > docker-smoke.log 2>&1
-                "%DOCKER_EXE%" rm -f hospital-jenkins-check >nul 2>&1
+                docker logs hospital-jenkins-check > docker-smoke.log 2>&1
+                docker rm -f hospital-jenkins-check 2>NUL
                 exit /b 0
             '''
             archiveArtifacts artifacts: 'docker-smoke.log', allowEmptyArchive: true
