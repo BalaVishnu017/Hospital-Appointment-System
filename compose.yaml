@@ -1,6 +1,6 @@
 services:
   hospital:
-    image: saigayathria48/hospital-appointment-system:latest
+    image: saigayathria48/student-attendance-management:hospital-67fedf6
     build: .
     ports:
       - "127.0.0.1:${HOST_PORT:-3001}:3001"

@@ -4,6 +4,8 @@ A local lab demonstration of patient registration and login, doctor search, appo
 
 ## Run with Docker Compose
 
+The hospital image is stored privately at `saigayathria48/student-attendance-management:hospital-67fedf6`. A distinct hospital tag is used because the Docker Hub account has no remaining private repository slots. The attendance image uses its own tags; the applications have separate containers, databases and ports. Sign in with `docker login` to pull the private image.
+
 From this directory with Docker Desktop running:
 
 ```powershell
