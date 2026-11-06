@@ -57,6 +57,7 @@ pipeline {
                 if not defined DOCKER_EXE set "DOCKER_EXE=docker"
                 "%DOCKER_EXE%" logs hospital-jenkins-check > docker-smoke.log 2>&1
                 "%DOCKER_EXE%" rm -f hospital-jenkins-check >nul 2>&1
+                exit /b 0
             '''
             archiveArtifacts artifacts: 'docker-smoke.log', allowEmptyArchive: true
         }
